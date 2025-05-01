@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthAI - Smart Medical Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2a7fba;
+            --secondary: #6c757d;
+            --accent: #3aaf85;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --bg-gradient: linear-gradient(135deg, #2a7fba 0%, #3aaf85 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            background-color: var(--dark) !important;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: rgba(255,255,255,0.8) !important;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+
+        .hero-section {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 5rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNwYXR0ZXJuKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==');
+        }
+
+        .symptom-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        #symptomsDropdown {
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            border: 1px solid #dee2e6;
+            border-radius: 0 0 8px 8px;
+            background: white;
+        }
+
+        .symptom-option {
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+
+        .symptom-option:hover {
+            background-color: #f0f7ff;
+        }
+
+        .selected-symptom {
+            background-color: #e3f2fd;
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .selected-symptom .remove {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .invalid-symptom {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .disease-badge {
+            background-color: #e3f2fd;
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 50px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            display: inline-block;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .disease-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .recommendation-item {
+            margin-bottom: 8px;
+            padding-left: 1rem;
+        }
+
+        .recommendation-item::before {
+            content: "• ";
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 0;
+            }
+
+            .symptom-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat me-2"></i>HealthAI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog">Blog</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">AI-Powered Health Assistant</h1>
+            <p class="lead">Get personalized medical recommendations based on your symptoms</p>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Symptom Input -->
+        <div class="symptom-container">
+            <form id="diagnosisForm" method="POST" action="/predict" onsubmit="return validateForm()">
+                <div class="mb-4">
+                    <h3 class="mb-4 text-center">Enter Your Symptoms</h3>
+
+                    <!-- Symptom Search with Dropdown -->
+                    <div class="position-relative mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text"
+                                   class="form-control"
+                                   id="symptomInput"
+                                   placeholder="Type symptoms (e.g. fever, headache)..."
+                                   autocomplete="off"
+                                   aria-label="Symptoms">
+                        </div>
+
+                        <!-- Symptoms Dropdown -->
+                        <div id="symptomsDropdown">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- Selected Symptoms -->
+                    <div class="mb-4">
+                        <div id="selectedSymptoms" class="d-flex flex-wrap mb-2"></div>
+                        <small class="text-muted">Selected symptoms will appear here. Click to remove.</small>
+                        <div id="symptomsError" class="invalid-symptom" style="display: none;">
+                            <i class="fas fa-exclamation-circle me-1"></i> Please select at least one symptom
+                        </div>
+                    </div>
+
+                    <!-- Hidden input for form submission -->
+                    <input type="hidden" id="hiddenSymptomsInput" name="symptoms">
+
+                    <!-- Voice Recognition -->
+                    <div class="text-center mb-4">
+                        <button type="button" id="startSpeechRecognition" class="btn btn-outline-primary">
+                            <i class="fas fa-microphone me-2"></i> Voice Input
+                        </button>
+                        <div id="transcription" class="mt-2 small text-muted"></div>
+                    </div>
+
+                    <!-- Common Diseases -->
+                    <div class="mt-4">
+                        <h5>Common Diseases:</h5>
+                        <div class="disease-list mt-2">
+                            {% for disease in diseases_list %}
+                            <span class="disease-badge" onclick="addDiseaseSymptoms('{{ disease }}')">
+                                {{ disease }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% if error %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i> {{ error }}
+                    </div>
+                    {% endif %}
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-search me-2"></i> Analyze Symptoms
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        {% if prediction %}
+        <div class="result-card">
+            <div class="row">
+                <div class="col-md-12 text-center mb-4">
+                    <h2 class="text-primary"><i class="fas fa-diagnosis me-2"></i> Diagnosis Results</h2>
+                    <h3 class="mt-3">{{ prediction }}</h3>
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Based on your symptoms:
+                        {% for symptom in symptoms %}
+                        <span class="badge bg-info me-1">{{ symptom }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="col-md-12 mb-4">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4><i class="fas fa-info-circle me-2"></i>Description</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>{{ description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Precautions -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h4><i class="fas fa-shield-alt me-2"></i>Precautions</h4>
+                        </div>
+                        <div class="card-body">
+                            {% for precaution in precautions %}
+                            <div class="recommendation-item">{{ precaution }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medications -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h4><i class="fas fa-capsules me-2"></i>Recommended Medications</h4>
+                        </div>
+                        <div class="card-body">
+                            {% for med in medications %}
+                            <div class="recommendation-item">{{ med }}</div>
+                            {% endfor %}
+                            <div class="alert alert-warning mt-3">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Always consult a doctor before taking any medication
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diet -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h4><i class="fas fa-utensils me-2"></i>Recommended Diet</h4>
+                        </div>
+                        <div class="card-body">
+                            {% for item in diets %}
+                            <div class="recommendation-item">{{ item }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workouts -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4><i class="fas fa-running me-2"></i>Recommended Lifestyle</h4>
+                        </div>
+                        <div class="card-body">
+                            {% for workout in workouts %}
+                            <div class="recommendation-item">{{ workout }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Track selected symptoms
+        let selectedSymptoms = [];
+        let highlightedIndex = -1;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle page reload
+            if (performance.navigation.type === 1) { // Type 1 is a page reload
+                // Redirect to home with reload flag
+                window.location.href = '/?reload=true';
+                return;
+            }
+
+            // Load from session if available
+            const urlParams = new URLSearchParams(window.location.search);
+            const symptomsParam = urlParams.get('symptoms');
+            if (symptomsParam) {
+                selectedSymptoms = symptomsParam.split(',').filter(s => s.trim());
+                updateSelectedSymptoms();
+            }
+
+            // Set up event listeners
+            setupEventListeners();
+
+            // Auto-scroll to results if needed
+            scrollToResults();
+        });
+
+        function scrollToResults() {
+            {% if scroll_to_results %}
+                const resultsSection = document.querySelector('.result-card');
+                if (resultsSection) {
+                    setTimeout(() => {
+                        resultsSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 100);
+                }
+            {% endif %}
+        }
+
+        function setupEventListeners() {
+            const symptomInput = document.getElementById('symptomInput');
+            const symptomsDropdown = document.getElementById('symptomsDropdown');
+
+            // Show dropdown when input is focused
+            symptomInput.addEventListener('focus', function() {
+                if (symptomInput.value.length > 0) {
+                    searchSymptoms(symptomInput.value);
+                } else {
+                    fetchAllSymptoms();
+                }
+            });
+
+            // Search as you type
+            symptomInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query.length > 0) {
+                    searchSymptoms(query);
+                } else {
+                    fetchAllSymptoms();
+                }
+            });
+
+            // Keyboard navigation
+            symptomInput.addEventListener('keydown', function(e) {
+                const options = document.querySelectorAll('.symptom-option');
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (options.length > 0) {
+                        highlightedIndex = (highlightedIndex + 1) % options.length;
+                        updateHighlightedOption(options);
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (options.length > 0) {
+                        highlightedIndex = (highlightedIndex - 1 + options.length) % options.length;
+                        updateHighlightedOption(options);
+                    }
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (highlightedIndex >= 0 && options[highlightedIndex]) {
+                        selectSymptom(options[highlightedIndex].textContent.trim());
+                    } else if (symptomInput.value.trim().length > 0) {
+                        selectSymptom(symptomInput.value.trim());
+                    }
+                } else if (e.key === 'Escape') {
+                    symptomsDropdown.style.display = 'none';
+                }
+            });
+
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#symptomsDropdown') && e.target !== symptomInput) {
+                    symptomsDropdown.style.display = 'none';
+                }
+            });
+
+            // Voice recognition
+            const startSpeechRecognition = document.getElementById('startSpeechRecognition');
+            const transcriptionDiv = document.getElementById('transcription');
+
+            if (startSpeechRecognition) {
+                startSpeechRecognition.addEventListener('click', function() {
+                    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                    recognition.lang = 'en-US';
+
+                    recognition.onresult = function(event) {
+                        const transcript = event.results[0][0].transcript;
+                        transcriptionDiv.textContent = `You said: "${transcript}"`;
+                        selectSymptom(transcript);
+                    };
+
+                    recognition.onerror = function(event) {
+                        transcriptionDiv.textContent = 'Error occurred in recognition: ' + event.error;
+                    };
+
+                    recognition.start();
+                });
+            }
+        }
+
+        // Fetch all symptoms
+        function fetchAllSymptoms() {
+            fetch('/api/search_symptoms')
+                .then(response => response.json())
+                .then(symptoms => {
+                    showSymptomsDropdown(symptoms, 'Common Symptoms');
+                })
+                .catch(error => {
+                    console.error('Error fetching symptoms:', error);
+                });
+        }
+
+        // Search symptoms
+        function searchSymptoms(query) {
+            if (query.length < 2) {
+                fetchAllSymptoms();
+                return;
+            }
+
+            fetch(`/api/search_symptoms?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(symptoms => {
+                    showSymptomsDropdown(symptoms, 'Matching Symptoms');
+                })
+                .catch(error => {
+                    console.error('Error searching symptoms:', error);
+                });
+        }
+
+        // Show symptoms in dropdown
+        function showSymptomsDropdown(symptoms, headerText) {
+            const symptomsDropdown = document.getElementById('symptomsDropdown');
+            if (symptoms.length === 0) {
+                symptomsDropdown.innerHTML = '<div class="p-3 text-muted">No matching symptoms found</div>';
+            } else {
+                symptomsDropdown.innerHTML = `
+                    <div class="dropdown-header p-2 bg-light border-bottom">${headerText}</div>
+                    ${symptoms.map(symptom => `
+                        <div class="symptom-option"
+                             onclick="selectSymptom('${symptom.replace(/'/g, "\\'")}')"
+                             onmouseover="highlightOption(this)">
+                            ${symptom}
+                        </div>
+                    `).join('')}`;
+            }
+            symptomsDropdown.style.display = 'block';
+            highlightedIndex = -1;
+        }
+
+        // Highlight option
+        function highlightOption(element) {
+            const options = document.querySelectorAll('.symptom-option');
+            options.forEach(opt => opt.classList.remove('bg-primary', 'text-white'));
+            element.classList.add('bg-primary', 'text-white');
+            highlightedIndex = Array.from(options).indexOf(element);
+        }
+
+        // Select symptom
+        function selectSymptom(symptom) {
+            if (!selectedSymptoms.includes(symptom)) {
+                selectedSymptoms.push(symptom);
+                updateSelectedSymptoms();
+                document.getElementById('symptomInput').value = '';
+                document.getElementById('symptomsDropdown').style.display = 'none';
+                highlightedIndex = -1;
+                document.getElementById('symptomsError').style.display = 'none';
+            }
+        }
+
+        // Add symptoms for a disease
+        async function addDiseaseSymptoms(disease) {
+            try {
+                const response = await fetch(`/api/disease_symptoms?disease=${encodeURIComponent(disease)}`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    data.symptoms.forEach(symptom => {
+                        if (!selectedSymptoms.includes(symptom)) {
+                            selectedSymptoms.push(symptom);
+                        }
+                    });
+                    updateSelectedSymptoms();
+                    document.getElementById('symptomsError').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Remove symptom
+        function removeSymptom(index) {
+            selectedSymptoms.splice(index, 1);
+            updateSelectedSymptoms();
+        }
+
+        // Update selected symptoms display
+        function updateSelectedSymptoms() {
+            const container = document.getElementById('selectedSymptoms');
+            const hiddenInput = document.getElementById('hiddenSymptomsInput');
+
+            container.innerHTML = selectedSymptoms.map((symptom, index) => `
+                <span class="selected-symptom">
+                    ${symptom}
+                    <span class="remove" onclick="removeSymptom(${index})">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </span>
+            `).join('');
+
+            hiddenInput.value = selectedSymptoms.join(',');
+        }
+
+        // Form validation
+        function validateForm() {
+            if (selectedSymptoms.length === 0) {
+                document.getElementById('symptomsError').style.display = 'block';
+                return false;
+            }
+            document.getElementById('hiddenSymptomsInput').value = selectedSymptoms.join(',');
+            return true;
+        }
+
+        // Form submission
+        document.getElementById('diagnosisForm').addEventListener('submit', function(e) {
+            if (selectedSymptoms.length === 0) {
+                e.preventDefault();
+                document.getElementById('symptomsError').style.display = 'block';
+                return;
+            }
+
+            // Update hidden input before submission
+            document.getElementById('hiddenSymptomsInput').value = selectedSymptoms.join(',');
+
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Analyzing...';
+            }
+        });
+
+        // Make functions globally available
+        window.selectSymptom = selectSymptom;
+        window.removeSymptom = removeSymptom;
+        window.addDiseaseSymptoms = addDiseaseSymptoms;
+        window.highlightOption = highlightOption;
+
+    </script>
+</body>
+</html>

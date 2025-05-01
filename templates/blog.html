@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How HealthAI Works | AI-Powered Medical Diagnosis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2a7fba;
+            --accent: #3aaf85;
+            --dark: #212529;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f8f9fa;
+            padding-top: 60px; /* Space for fixed navbar */
+        }
+        .navbar {
+            background-color: var(--dark) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+        }
+        .nav-link {
+            font-weight: 500;
+        }
+        .blog-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            padding: 3rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-top: 2rem;
+            font-weight: 600;
+        }
+        h1 {
+            font-size: 2.2rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        .feature-icon {
+            color: var(--accent);
+            margin-right: 10px;
+        }
+        ul.feature-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        ul.feature-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 30px;
+        }
+        ul.feature-list li:before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        .highlight-box {
+            background-color: #f0f7ff;
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .lead {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        .process-step {
+            height: 100%;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .process-step:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Consistent Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat me-2"></i>HealthAI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/blog">Blog</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <div class="blog-container">
+            <h1>How HealthAI Works</h1>
+            <p class="lead">Our AI-powered system analyzes symptoms using advanced machine learning to provide accurate health assessments.</p>
+
+            <div class="tech-stack">
+                <div class="highlight-box">
+                    <h3><i class="fas fa-brain feature-icon"></i> Machine Learning Core</h3>
+                    <ul>
+                        <li><strong>SVM Classifier</strong> with 92% accuracy</li>
+                        <li>41+ disease predictions</li>
+                        <li>Specialized symptom weighting</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h3><i class="fas fa-laptop-code feature-icon"></i> Web Platform</h3>
+                    <ul>
+                        <li>Flask Python backend</li>
+                        <li>Responsive Bootstrap design</li>
+                        <li>Secure patient data handling</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>The Diagnosis Process</h2>
+            <div class="row mt-4">
+                <div class="col-md-4 mb-4">
+                    <div class="process-step">
+                        <h4 class="text-primary">1. Symptom Input</h4>
+                        <ul>
+                            <li>Intuitive search interface</li>
+                            <li>Voice input capability</li>
+                            <li>Common disease presets</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="process-step">
+                        <h4 class="text-primary">2. AI Analysis</h4>
+                        <ul>
+                            <li>Real-time processing</li>
+                            <li>Symptom pattern matching</li>
+                            <li>Probability scoring</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="process-step">
+                        <h4 class="text-primary">3. Results Delivery</h4>
+                        <ul>
+                            <li>Detailed disease report</li>
+                            <li>Treatment recommendations</li>
+                            <li>Prevention strategies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Key Advantages</h2>
+            <ul class="feature-list mt-3">
+                <li><strong>Clinical Accuracy:</strong> Our model outperforms basic decision trees by 15-20% in testing</li>
+                <li><strong>Comprehensive Database:</strong> Covers diseases from common colds to chronic conditions</li>
+                <li><strong>User Privacy:</strong> All sessions are encrypted and anonymized</li>
+                <li><strong>Continuous Learning:</strong> Model improves with new medical research</li>
+            </ul>
+
+            <div class="alert alert-primary mt-5">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-info-circle fa-2x me-3"></i>
+                    <div>
+                        <h4 class="alert-heading">Important Note</h4>
+                        <p class="mb-0">HealthAI provides informational support only. Always consult a healthcare professional for medical advice.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | HealthAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2a7fba;
+            --accent: #3aaf85;
+            --dark: #212529;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f8f9fa;
+            padding-top: 60px;
+        }
+        .navbar {
+            background-color: var(--dark) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 1000px;
+        }
+        .skill-badge {
+            background-color: #e3f2fd;
+            color: var(--primary);
+            margin: 0.3rem;
+            font-weight: 500;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+        }
+        .timeline:before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 3px solid white;
+        }
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        .contact-btn {
+            min-width: 120px;
+            margin: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Minimal Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat me-2"></i>HealthAI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link active" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog">Blog</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Section -->
+    <div class="container py-4">
+        <!-- Profile Intro -->
+        <div class="profile-card">
+            <h2 class="text-center mb-4">Muhammad Rehman Ali</h2>
+            <p class="text-center text-muted mb-4">BS Computer Science | University of Agriculture, Faisalabad</p>
+
+            <div class="d-flex flex-wrap justify-content-center mb-4">
+                <a href="https://www.linkedin.com/in/muhammadrehmanali/" class="btn btn-outline-primary contact-btn">
+                    <i class="fab fa-linkedin me-2"></i> LinkedIn
+                </a>
+                <a href="https://github.com/Muhammad-Rehman-Ali" class="btn btn-outline-dark contact-btn">
+                    <i class="fab fa-github me-2"></i> GitHub
+                </a>
+                <a href="mailto:rehmanqurban123@gmail.com" class="btn btn-outline-danger contact-btn">
+                    <i class="fas fa-envelope me-2"></i> Email
+                </a>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-center mb-4">
+                <span class="skill-badge badge">Python</span>
+                <span class="skill-badge badge">Pandas</span>
+                <span class="skill-badge badge">NumPy</span>
+                <span class="skill-badge badge">Machine Learning</span>
+                <span class="skill-badge badge">Data Visualization</span>
+                <span class="skill-badge badge">Flask</span>
+            </div>
+
+            <!-- Objective -->
+            <div class="d-flex align-items-center mb-3">
+                <div class="icon-box">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3 class="mb-0">Career Objective</h3>
+            </div>
+            <p>Aspiring data scientist with strong foundation in computer science and expertise in programming, data analysis, and visualization using Python libraries. Skilled in machine learning and eager to apply technical and analytical abilities to real-world challenges.</p>
+
+            <!-- Education -->
+            <div class="d-flex align-items-center mb-3 mt-4">
+                <div class="icon-box">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="mb-0">Education</h3>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h5>BS Computer Science</h5>
+                    <p class="text-muted">University of Agriculture, Faisalabad</p>
+                    <p><strong>CGPA:</strong> 3.62 | <strong>Expected:</strong> 2025</p>
+                </div>
+                <div class="timeline-item">
+                    <h5>FSc (Non-medical)</h5>
+                    <p class="text-muted">Punjab Group of Colleges, Pir Mahal</p>
+                    <p><strong>Score:</strong> 92.6% | <strong>Year:</strong> 2021</p>
+                </div>
+                <div class="timeline-item">
+                    <h5>Matric (Science)</h5>
+                    <p class="text-muted">Misali Chenab Model High School</p>
+                    <p><strong>Score:</strong> 91.9% | <strong>Year:</strong> 2019</p>
+                </div>
+            </div>
+
+            <!-- Experience -->
+            <div class="d-flex align-items-center mb-3 mt-4">
+                <div class="icon-box">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3 class="mb-0">Experience</h3>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h5>Python Programming Intern</h5>
+                    <p class="text-muted">Shulatech Solutions</p>
+                    <p><strong>Duration:</strong> February - March 2025</p>
+                    <ul>
+                        <li>Gained comprehensive hands-on experience in Python programming</li>
+                        <li>Demonstrated exceptional adaptability and technical skills</li>
+                    </ul>
+                </div>
+                <div class="timeline-item">
+                    <h5>Machine Learning Intern</h5>
+                    <p class="text-muted">Digital Empowerment Network</p>
+                    <p><strong>Duration:</strong> August 2024</p>
+                    <ul>
+                        <li>Gained hands-on experience in machine learning applications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
