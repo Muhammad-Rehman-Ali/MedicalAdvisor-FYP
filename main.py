@@ -5,11 +5,9 @@ import pickle
 from fuzzywuzzy import process
 from datetime import datetime
 import traceback
-from dotenv import load_dotenv
+import secrets
 import os
-
-load_dotenv()  # Loads .env file
-
+from mangum import Mangum
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
@@ -242,3 +240,5 @@ def blog():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+handler = Mangum(app)
