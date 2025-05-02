@@ -1,7 +1,0 @@
-datasets/
-models/
-*.pkl
-*.csv
-*.joblib
-.venv/
-__pycache__/

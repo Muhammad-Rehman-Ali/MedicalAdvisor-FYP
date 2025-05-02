@@ -5,9 +5,11 @@ import pickle
 from fuzzywuzzy import process
 from datetime import datetime
 import traceback
-import secrets
+from dotenv import load_dotenv
 import os
-from mangum import Mangum
+
+load_dotenv()  # Loads .env file
+
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
@@ -15,7 +17,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 # Load datasets
 try:
-    symptoms_severity = pd.read_csv('https://drive.google.com/drive/folders/1Tgcbc4STsvrH9EDg3vK8XX9Q4YohMY_h')
+    symptoms_severity = pd.read_csv('datasets/Symptom-severity.csv')
     precautions = pd.read_csv('datasets/precautions_df.csv')
     workout = pd.read_csv('datasets/workout_df.csv')
     description = pd.read_csv('datasets/description.csv')
@@ -240,5 +242,3 @@ def blog():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-handler = Mangum(app)
