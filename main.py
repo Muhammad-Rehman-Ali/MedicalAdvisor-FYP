@@ -15,7 +15,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 # Load datasets
 try:
-    symptoms_severity = pd.read_csv('datasets/Symptom-severity.csv')
+    symptoms_severity = pd.read_csv('https://drive.google.com/drive/folders/1Tgcbc4STsvrH9EDg3vK8XX9Q4YohMY_h')
     precautions = pd.read_csv('datasets/precautions_df.csv')
     workout = pd.read_csv('datasets/workout_df.csv')
     description = pd.read_csv('datasets/description.csv')
