@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptoms | HealthAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2a7fba;
+            --accent: #3aaf85;
+            --dark: #212529;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 60px;
+        }
+        .navbar {
+            background-color: var(--dark) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: rgba(255,255,255,0.8) !important;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+        .symptoms-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+        .symptom-heading {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .symptom-list {
+            list-style-type: none;
+            padding-left: 0;
+            column-count: 1;
+        }
+        .symptom-list li {
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            break-inside: avoid;
+        }
+        .symptom-list li:before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        @media (max-width: 992px) {
+            .col-md-3 {
+                width: 50%;
+            }
+        }
+        @media (max-width: 576px) {
+            .col-md-3 {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat me-2"></i>HealthAI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/symptoms">Symptoms</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Symptoms Content Section -->
+    <div class="container py-4">
+        <div class="symptoms-container">
+            <div class="symptom-heading">
+                <h2><i class="fas fa-clipboard-list me-2"></i>Symptoms</h2>
+                <p class="mb-0">Complete list of recognized symptoms</p>
+            </div>
+
+            <div class="row">
+                <!-- Column 1 -->
+                <div class="col-md-3">
+                    <ul class="symptom-list">
+                        <li>itching</li>
+                        <li>skin_rash</li>
+                        <li>nodal_skin_eruptions</li>
+                        <li>continuous_sneezing</li>
+                        <li>shivering</li>
+                        <li>chills</li>
+                        <li>joint_pain</li>
+                        <li>knee_pain</li>
+                        <li>stomach_pain</li>
+                        <li>acidity</li>
+                        <li>ulcers_on_tongue</li>
+                        <li>muscle_wasting</li>
+                        <li>vomiting</li>
+                        <li>burning_micturition</li>
+                        <li>spotting_ urination</li>
+                        <li>fatigue</li>
+                        <li>weight_gain</li>
+                        <li>anxiety</li>
+                        <li>cold_hands_and_feets</li>
+                        <li>mood_swings</li>
+                        <li>weight_loss</li>
+                        <li>restlessness</li>
+                        <li>lethargy</li>
+                        <li>patches_in_throat</li>
+                        <li>irregular_sugar_level</li>
+                        <li>cough</li>
+                        <li>high_fever</li>
+                        <li>sunken_eyes</li>
+                        <li>breathlessness</li>
+                        <li>sweating</li>
+                        <li>dehydration</li>
+                        <li>indigestion</li>
+                        <li>headache</li>
+                    </ul>
+                </div>
+
+                <!-- Column 2 -->
+                <div class="col-md-3">
+                    <ul class="symptom-list">
+                        <li>yellowish_skin</li>
+                        <li>dark_urine</li>
+                        <li>nausea</li>
+                        <li>loss_of_appetite</li>
+                        <li>pain_behind_the_eyes</li>
+                        <li>back_pain</li>
+                        <li>constipation</li>
+                        <li>abdominal_pain</li>
+                        <li>diarrhoea</li>
+                        <li>mild_fever</li>
+                        <li>yellow_urine</li>
+                        <li>yellowing_of_eyes</li>
+                        <li>acute_liver_failure</li>
+                        <li>fluid_overload</li>
+                        <li>swelling_of_stomach</li>
+                        <li>swelled_lymph_nodes</li>
+                        <li>malaise</li>
+                        <li>blurred_and_distorted_vision</li>
+                        <li>phlegm</li>
+                        <li>depression</li>
+                        <li>throat_irritation</li>
+                        <li>redness_of_eyes</li>
+                        <li>sinus_pressure</li>
+                        <li>runny_nose</li>
+                        <li>congestion</li>
+                        <li>chest_pain</li>
+                        <li>weakness_in_limbs</li>
+                        <li>fast_heart_rate</li>
+                        <li>pain_during_bowel_movements</li>
+                        <li>pain_in_anal_region</li>
+                        <li>bloody_stool</li>
+                        <li>irritation_in_anus</li>
+                        <li>neck_pain</li>
+                    </ul>
+                </div>
+
+                <!-- Column 3 -->
+                <div class="col-md-3">
+                    <ul class="symptom-list">
+                        <li>dizziness</li>
+                        <li>cramps</li>
+                        <li>bruising</li>
+                        <li>obesity</li>
+                        <li>coma</li>
+                        <li>swollen_legs</li>
+                        <li>swollen_blood_vessels</li>
+                        <li>puffy_face_and_eyes</li>
+                        <li>enlarged_thyroid</li>
+                        <li>brittle_nails</li>
+                        <li>swollen_extremeties</li>
+                        <li>excessive_hunger</li>
+                        <li>extra_marital_contacts</li>
+                        <li>drying_and_tingling_lips</li>
+                        <li>slurred_speech</li>
+                        <li>hip_joint_pain</li>
+                        <li>muscle_weakness</li>
+                        <li>stiff_neck</li>
+                        <li>swelling_joints</li>
+                        <li>movement_stiffness</li>
+                        <li>spinning_movements</li>
+                        <li>loss_of_balance</li>
+                        <li>unsteadiness</li>
+                        <li>weakness_of_one_body_side</li>
+                        <li>loss_of_smell</li>
+                        <li>bladder_discomfort</li>
+                        <li>foul_smell_of urine</li>
+                        <li>continuous_feel_of_urine</li>
+                        <li>passage_of_gases</li>
+                        <li>internal_itching</li>
+                        <li>toxic_look_(typhos)</li>
+                        <li>irritability</li>
+                        <li>muscle_pain</li>
+                    </ul>
+                </div>
+
+                <!-- Column 4 -->
+                <div class="col-md-3">
+                    <ul class="symptom-list">
+                        <li>altered_sensorium</li>
+                        <li>red_spots_over_body</li>
+                        <li>belly_pain</li>
+                        <li>abnormal_menstruation</li>
+                        <li>dischromic _patches</li>
+                        <li>watering_from_eyes</li>
+                        <li>increased_appetite</li>
+                        <li>polyuria</li>
+                        <li>family_history</li>
+                        <li>mucoid_sputum</li>
+                        <li>rusty_sputum</li>
+                        <li>lack_of_concentration</li>
+                        <li>visual_disturbances</li>
+                        <li>receiving_blood_transfusion</li>
+                        <li>receiving_unsterile_injections</li>
+                        <li>stomach_bleeding</li>
+                        <li>distention_of_abdomen</li>
+                        <li>history_of_alcohol_consumption</li>
+                        <li>fluid_overload</li>
+                        <li>blood_in_sputum</li>
+                        <li>prominent_veins_on_calf</li>
+                        <li>palpitations</li>
+                        <li>painful_walking</li>
+                        <li>pus_filled_pimples</li>
+                        <li>blackheads</li>
+                        <li>scurring</li>
+                        <li>skin_peeling</li>
+                        <li>silver_like_dusting</li>
+                        <li>small_dents_in_nails</li>
+                        <li>inflammatory_nails</li>
+                        <li>blister</li>
+                        <li>red_sore_around_nose</li>
+                        <li>yellow_crust_ooze</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

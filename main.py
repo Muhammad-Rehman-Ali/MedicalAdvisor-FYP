@@ -1,3 +1,8 @@
+"""
+Medicine Recommendation System - Flask Application
+Refined version with better coding style
+"""
+
 from flask import Flask, request, render_template, jsonify, session, redirect, url_for
 import numpy as np
 import pandas as pd
@@ -7,46 +12,110 @@ from datetime import datetime
 import traceback
 from dotenv import load_dotenv
 import os
+import warnings
 
-load_dotenv()  # Loads .env file
-
-
+# Initialize Flask app
+load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
+
 # Load datasets
-try:
+def load_data():
+    """Load all required datasets"""
     symptoms_severity = pd.read_csv('datasets/Symptom-severity.csv')
-    precautions = pd.read_csv('datasets/precautions_df.csv')
-    workout = pd.read_csv('datasets/workout_df.csv')
-    description = pd.read_csv('datasets/description.csv')
-    medications = pd.read_csv('datasets/medications.csv')
-    diets = pd.read_csv('datasets/diets.csv')
     training_data = pd.read_csv('datasets/Training.csv')
-except Exception as e:
-    print(f"Error loading datasets: {str(e)}")
-    raise
+    sym_des = pd.read_csv("datasets/symtoms_df.csv")
+    precautions = pd.read_csv("datasets/precautions_df.csv")
+    workout = pd.read_csv("datasets/workout_df.csv")
+    description = pd.read_csv("datasets/description.csv")
+    medications = pd.read_csv('datasets/medications.csv')
+    diets = pd.read_csv("datasets/diets.csv")
 
-# Create mappings
-symptoms_dict = {symptom.lower(): idx for idx, symptom in enumerate(symptoms_severity['Symptom'])}
-symptoms_list = sorted(symptoms_severity['Symptom'].unique().tolist())
-diseases_list = sorted(training_data['prognosis'].unique().tolist())
+    return {
+        'symptoms_severity': symptoms_severity,
+        'training_data': training_data,
+        'sym_des': sym_des,
+        'precautions': precautions,
+        'workout': workout,
+        'description': description,
+        'medications': medications,
+        'diets': diets
+    }
 
-# Load model
-try:
-    model = pickle.load(open('models/svc.pkl', 'rb'))
-except Exception as e:
-    print(f"Error loading model: {str(e)}")
-    raise
+
+# Load data and model
+data = load_data()
+model = pickle.load(open('models/svc.pkl', 'rb'))
+
+# Prepare symptom and disease lists
+symptoms_dict = {symptom.lower(): idx for idx, symptom in enumerate(data['symptoms_severity']['Symptom'])}
+symptoms_list = sorted(data['symptoms_severity']['Symptom'].unique().tolist())
+diseases_list = sorted(data['training_data']['prognosis'].unique().tolist())
+
+
+def correct_symptom(input_symptom):
+    """Correct misspelled symptoms using fuzzy matching"""
+    input_symptom = input_symptom.lower().strip()
+
+    if input_symptom in symptoms_dict:
+        return input_symptom
+
+    matched = process.extractOne(
+        input_symptom,
+        symptoms_dict.keys(),
+        score_cutoff=70
+    )
+    return matched[0] if matched else None
+
+
+def get_recommendations(disease):
+    """Get all recommendations for a disease"""
+    try:
+        clean_disease = disease.strip().lower()
+
+        # Clean disease names in all datasets
+        data['description']['Disease'] = data['description']['Disease'].str.strip().str.lower()
+        data['precautions']['Disease'] = data['precautions']['Disease'].str.strip().str.lower()
+        data['medications']['Disease'] = data['medications']['Disease'].str.strip().str.lower()
+        data['diets']['Disease'] = data['diets']['Disease'].str.strip().str.lower()
+        data['workout']['disease'] = data['workout']['disease'].str.strip().str.lower()
+
+        # Get description
+        matched_desc = data['description'][data['description']['Disease'] == clean_disease]
+        desc = matched_desc['Description'].values[0] if not matched_desc.empty else "No description available"
+
+        # Get precautions
+        matched_prec = data['precautions'][data['precautions']['Disease'] == clean_disease]
+        prec = matched_prec.iloc[0, 1:].dropna().tolist() if not matched_prec.empty else []
+
+        # Get medications
+        matched_meds = data['medications'][data['medications']['Disease'] == clean_disease]
+        meds = [m.strip("[]'\"") for m in
+                matched_meds['Medication'].dropna().tolist()] if not matched_meds.empty else []
+
+        # Get diets
+        matched_diet = data['diets'][data['diets']['Disease'] == clean_disease]
+        diet = [d.strip("[]'\"") for d in matched_diet['Diet'].dropna().tolist()] if not matched_diet.empty else []
+
+        # Get workouts
+        matched_workout = data['workout'][data['workout']['disease'] == clean_disease]
+        workouts = [w.strip("[]'\"") for w in
+                    matched_workout['workout'].dropna().tolist()] if not matched_workout.empty else []
+
+        return desc, prec, meds, diet, workouts
+
+    except Exception as e:
+        app.logger.error(f"Error getting recommendations: {str(e)}")
+        return "No description available", [], [], [], []
 
 
 def log_interaction(user_input, prediction=None):
-    """Log user interactions"""
+    """Log user interactions to session"""
     try:
-        timestamp = datetime.now().isoformat()
         log_entry = {
-            'timestamp': timestamp,
+            'timestamp': datetime.now().isoformat(),
             'input': user_input,
             'prediction': prediction,
             'ip': request.remote_addr
@@ -57,49 +126,28 @@ def log_interaction(user_input, prediction=None):
         session['history'].append(log_entry)
         session.modified = True
     except Exception as e:
-        print(f"Error logging interaction: {str(e)}")
-
-
-def correct_symptom(input_symptom):
-    """Correct misspelled symptoms"""
-    input_symptom = input_symptom.lower().strip()
-    if input_symptom in symptoms_dict:
-        return input_symptom
-    matched = process.extractOne(input_symptom, symptoms_dict.keys(), score_cutoff=70)
-    return matched[0] if matched else None
-
-
-def get_recommendations(disease):
-    """Get all recommendations for a disease"""
-    try:
-        desc = description[description['Disease'] == disease]['Description'].values[0]
-        prec = precautions[precautions['Disease'] == disease].iloc[0, 1:].dropna().tolist()
-        meds = [m.strip("[]'\"") for m in
-                medications[medications['Disease'] == disease]['Medication'].dropna().tolist()]
-        diet = [d.strip("[]'\"") for d in diets[diets['Disease'] == disease]['Diet'].dropna().tolist()]
-        workouts = [w.strip("[]'\"") for w in workout[workout['disease'] == disease]['workout'].dropna().tolist()]
-        return desc, prec, meds, diet, workouts
-    except Exception as e:
-        print(f"Error getting recommendations for {disease}: {str(e)}")
-        return "No description available", [], [], [], []
+        app.logger.error(f"Error logging interaction: {str(e)}")
 
 
 @app.route('/')
 def index():
     """Home page with recent searches"""
-    # Clear prediction data when page is reloaded
     if request.args.get('reload') == 'true':
-        if 'prediction_data' in session:
-            session.pop('prediction_data', None)
-            session.modified = True
+        session.pop('prediction_data', None)
+        session.modified = True
         return redirect(url_for('index'))
 
     recent_searches = []
     if 'history' in session:
-        recent_searches = list(
-            {item['prediction'] for item in session['history'] if item['prediction'] in diseases_list})
-    return render_template('index.html', symptoms_list=symptoms_list, diseases_list=diseases_list,
-                           recent_searches=recent_searches[:5])
+        recent_searches = list({item['prediction'] for item in session['history']
+                                if item['prediction'] in diseases_list})[:5]
+
+    return render_template(
+        'index.html',
+        symptoms_list=symptoms_list,
+        diseases_list=diseases_list,
+        recent_searches=recent_searches
+    )
 
 
 @app.route('/clear_session', methods=['POST'])
@@ -113,19 +161,18 @@ def clear_session():
 def predict():
     """Handle symptom prediction"""
     try:
-        symptoms = request.form.get('symptoms', '')
-        print(f"Received symptoms: {symptoms}")
+        symptoms_input = request.form.get('symptoms', '')
 
-        if not symptoms:
-            return render_template('index.html',
-                                   error="Please select symptoms",
-                                   symptoms_list=symptoms_list,
-                                   diseases_list=diseases_list)
+        if not symptoms_input:
+            return render_template(
+                'index.html',
+                error="Please select symptoms",
+                symptoms_list=symptoms_list,
+                diseases_list=diseases_list
+            )
 
-        # Process symptoms with validation
-        user_symptoms = [s.strip() for s in symptoms.split(',') if s.strip()]
-        print(f"Processed symptoms: {user_symptoms}")
-
+        # Process symptoms
+        user_symptoms = [s.strip() for s in symptoms_input.split(',') if s.strip()]
         valid_symptoms = []
         invalid_symptoms = []
 
@@ -137,39 +184,31 @@ def predict():
                 invalid_symptoms.append(symptom)
 
         if not valid_symptoms:
-            return render_template('index.html', error="No valid symptoms found", symptoms_list=symptoms_list,
-                                   diseases_list=diseases_list)
+            return render_template(
+                'index.html',
+                error="No valid symptoms found",
+                symptoms_list=symptoms_list,
+                diseases_list=diseases_list
+            )
 
-        # Create input vector
+        # Create input vector and predict (with warning suppression)
         input_vector = np.zeros(len(symptoms_dict))
         for symptom in valid_symptoms:
             input_vector[symptoms_dict[symptom]] = 1
 
-        # Get prediction
-        disease_encoded = model.predict([input_vector])[0]
-        predicted_disease = diseases_list[disease_encoded]
-
-        # Special cases handling for diseases with wrong predictions
-        disease_mappings = {
-            'typhoid': 'Typhoid',
-            'dengue': 'Dengue',
-            'vertigo': 'Paroymsal Positional Vertigo',
-            'hepatitis e': 'Hepatitis E',
-            'tuberculosis': 'Tuberculosis'
-        }
-
-        for keyword, disease in disease_mappings.items():
-            if keyword in ' '.join(valid_symptoms).lower() and predicted_disease != disease:
-                predicted_disease = disease
-                break
+        # Suppress sklearn warnings during prediction
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            disease_encoded = model.predict([input_vector])[0]
+            predicted_disease = diseases_list[disease_encoded]
 
         # Get recommendations
         desc, prec, meds, diet, workouts = get_recommendations(predicted_disease)
 
         # Log interaction
-        log_interaction(symptoms, predicted_disease)
+        log_interaction(symptoms_input, predicted_disease)
 
-        # Store in session for back navigation
+        # Store in session
         session['prediction_data'] = {
             'prediction': predicted_disease,
             'description': desc,
@@ -186,10 +225,14 @@ def predict():
         return redirect(url_for('results'))
 
     except Exception as e:
-        print(f"Prediction error: {str(e)}")
+        app.logger.error(f"Prediction error: {str(e)}")
         traceback.print_exc()
-        return render_template('index.html', error="An error occurred. Please try again.", symptoms_list=symptoms_list,
-                               diseases_list=diseases_list)
+        return render_template(
+            'index.html',
+            error="An error occurred. Please try again.",
+            symptoms_list=symptoms_list,
+            diseases_list=diseases_list
+        )
 
 
 @app.route('/results')
@@ -199,19 +242,26 @@ def results():
         return redirect(url_for('index'))
 
     data = session['prediction_data']
-    return render_template('index.html', **data, symptoms_list=symptoms_list, diseases_list=diseases_list)
+    return render_template(
+        'index.html',
+        **data,
+        symptoms_list=symptoms_list,
+        diseases_list=diseases_list
+    )
 
 
 @app.route('/api/search_symptoms')
 def search_symptoms():
     """API endpoint for symptom search"""
     query = request.args.get('q', '').lower()
+
     if not query:
         return jsonify(symptoms_list[:20])
 
     exact_matches = [s for s in symptoms_list if query in s.lower()]
     fuzzy_matches = process.extract(query, symptoms_list, limit=10)
     fuzzy_matches = [m[0] for m in fuzzy_matches if m[1] > 60 and m[0] not in exact_matches]
+
     return jsonify(exact_matches + fuzzy_matches[:10])
 
 
@@ -219,25 +269,41 @@ def search_symptoms():
 def disease_symptoms_api():
     """API endpoint for disease symptoms"""
     disease = request.args.get('disease')
+
     if not disease:
         return jsonify({'error': 'Disease parameter is required'}), 400
 
     try:
-        disease_data = training_data[training_data['prognosis'] == disease].iloc[:, :-1]
+        disease_data = data['training_data'][data['training_data']['prognosis'] == disease].iloc[:, :-1]
         symptoms = disease_data.sum().nlargest(5).index.tolist()
-        return jsonify({'status': 'success', 'disease': disease, 'symptoms': symptoms})
+        return jsonify({
+            'status': 'success',
+            'disease': disease,
+            'symptoms': symptoms
+        })
     except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
 
 
 @app.route('/about')
 def about():
+    """About page"""
     return render_template("about.html")
 
 
 @app.route('/blog')
 def blog():
+    """Blog page"""
     return render_template("blog.html")
+
+
+@app.route('/symptoms')
+def symptoms():
+    """Symptoms dictionary page"""
+    return render_template('symptoms.html')
 
 
 if __name__ == '__main__':
